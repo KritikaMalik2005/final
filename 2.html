@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Udyon AI - Empowering Rural Entrepreneurs</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sih: {
+                            orange: '#FF6B00',
+                            green: '#00875A',
+                            navy: '#0F2C59',
+                            lightBg: '#F8FAFC',
+                            emerald: '#059669'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-sih-orange selection:text-white">
+
+    <!-- Header Navigation -->
+    <nav class="bg-sih-navy text-white sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <div class="bg-sih-orange text-white p-2 rounded-xl font-extrabold flex items-center justify-center w-10 h-10 shadow">
+                    <i class="fa-solid fa-wheat-awn text-xl"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-lg sm:text-xl tracking-wide flex items-center gap-2">
+                        Udyon AI <span class="bg-sih-green/30 border border-sih-green text-green-300 text-[10px] px-2 py-0.5 rounded-full font-medium">SIH Prototype</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Nav Links -->
+            <div class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-200">
+                <a href="#features" id="nav-features" class="hover:text-sih-orange transition">Features</a>
+                <a href="#schemes" id="nav-schemes" class="hover:text-sih-orange transition">Govt Schemes</a>
+                <a href="#ai-demo" id="nav-demo" class="hover:text-sih-orange transition">Live AI Demo</a>
+                <a href="1.html#/register" class="text-sih-orange font-bold hover:underline flex items-center gap-1">
+                    <i class="fa-solid fa-shop"></i> Vendor Portal
+                </a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <!-- Language Selector Dropdown -->
+                <div class="relative flex items-center bg-slate-800/80 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white">
+                    <i class="fa-solid fa-globe text-sih-orange mr-1.5"></i>
+                    <select id="language-select" onchange="changeLanguage(this.value)" class="bg-transparent text-white focus:outline-none cursor-pointer font-medium pr-1">
+                        <option value="en" class="bg-slate-900 text-white" selected>English</option>
+                        <option value="hi" class="bg-slate-900 text-white">हिंदी (Hindi)</option>
+                        <option value="pa" class="bg-slate-900 text-white">ਪੰਜਾਬੀ (Punjabi)</option>
+                    </select>
+                </div>
+
+                <a href="1.html#/login" class="bg-sih-orange hover:bg-orange-600 px-4 py-2 rounded-lg text-xs font-bold text-white shadow-md transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-right-to-bracket"></i> <span>Vendor Sign In</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-b from-sih-navy via-slate-900 to-slate-950 text-white py-16 sm:py-24 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            
+            <div class="space-y-6 text-center lg:text-left">
+                <span id="hero-badge" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-sih-orange/20 text-sih-orange border border-sih-orange/30">
+                    <i class="fa-solid fa-bolt"></i> AI-Powered Rural Advisory Platform
+                </span>
+                <h1 id="hero-title" class="text-3xl sm:text-5xl font-extrabold leading-tight text-white tracking-tight">
+                    Empowering Rural Businesses with <span class="text-sih-orange">AI Intelligence</span>
+                </h1>
+                <p id="hero-desc" class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-xl mx-auto lg:mx-0">
+                    Get instant business guidance in your preferred language, check eligibility for government schemes like MUDRA & PMEGP, and manage daily cash flow effortlessly.
+                </p>
+                
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                    <a href="1.html#/register" id="btn-launch-ai" class="bg-sih-green hover:bg-emerald-600 text-white font-bold px-6 py-3.5 rounded-xl text-sm shadow-lg transition-all flex items-center gap-2">
+                        <span>Register Vendor Account</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="1.html#/login" id="btn-explore-schemes" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold px-6 py-3.5 rounded-xl text-sm transition">
+                        Vendor Sign In
+                    </a>
+                </div>
+
+                <div class="pt-6 border-t border-slate-800 flex flex-wrap justify-center lg:justify-start items-center gap-6 text-xs text-slate-400">
+                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-sih-green"></i> Encrypted Data</span>
+                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-language text-sky-400"></i> Multilingual Support</span>
+                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-building-columns text-sih-orange"></i> Govt Scheme Integration</span>
+                </div>
+            </div>
+
+            <!-- Hero Feature Image & Overlay Preview Card -->
+            <div class="relative rounded-2xl overflow-hidden border border-slate-800 shadow-2xl group">
+                <img src="https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?auto=format&fit=crop&w=800&q=80" alt="Rural Entrepreneur" class="w-full h-[380px] object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent p-6 flex flex-col justify-end">
+                    <div class="space-y-3">
+                        <div class="bg-slate-900/80 backdrop-blur p-3.5 rounded-xl border border-slate-700/60 flex items-center gap-3">
+                            <i class="fa-solid fa-robot text-sih-orange text-lg"></i>
+                            <div>
+                                <h4 id="hero-card1-title" class="text-xs font-bold text-white uppercase tracking-wider">Localized Business Advisory</h4>
+                                <p id="hero-card1-desc" class="text-[11px] text-slate-300">Tailored business strategies for regional market demands.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/80 backdrop-blur p-3.5 rounded-xl border border-slate-700/60 flex items-center gap-3">
+                            <i class="fa-solid fa-hand-holding-dollar text-sih-green text-lg"></i>
+                            <div>
+                                <h4 id="hero-card2-title" class="text-xs font-bold text-white uppercase tracking-wider">Collateral-Free Scheme Match</h4>
+                                <p id="hero-card2-desc" class="text-[11px] text-slate-300">Instant eligibility verification for MUDRA & PMEGP loans.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Key Features Section (With Card Images) -->
+    <section id="features" class="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span id="feat-sub" class="text-xs font-bold uppercase tracking-widest text-sih-orange">Core Capabilities</span>
+            <h2 id="feat-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Built for Rural & Micro Enterprises</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80" alt="Multilingual AI" class="w-full h-44 object-cover">
+                <div class="p-6 flex-grow flex flex-col">
+                    <div class="w-10 h-10 rounded-xl bg-orange-50 text-sih-orange flex items-center justify-center text-lg mb-3">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <h3 id="feat1-title" class="font-bold text-slate-800 text-base mb-2">Multilingual AI Chat</h3>
+                    <p id="feat1-desc" class="text-xs text-slate-600 leading-relaxed">Ask business queries in English, Hindi, or Punjabi and receive easy-to-understand guidance.</p>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col">
+                <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=600&q=80" alt="Govt Schemes" class="w-full h-44 object-cover">
+                <div class="p-6 flex-grow flex flex-col">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-sih-green flex items-center justify-center text-lg mb-3">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </div>
+                    <h3 id="feat2-title" class="font-bold text-slate-800 text-base mb-2">Instant Loan Check</h3>
+                    <p id="feat2-desc" class="text-xs text-slate-600 leading-relaxed">Check eligibility for MUDRA loans (Shishu, Kishore, Tarun) and PMEGP capital subsidies within seconds.</p>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col">
+                <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80" alt="Cash Flow" class="w-full h-44 object-cover">
+                <div class="p-6 flex-grow flex flex-col">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg mb-3">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3 id="feat3-title" class="font-bold text-slate-800 text-base mb-2">Cash Flow Tracker</h3>
+                    <p id="feat3-desc" class="text-xs text-slate-600 leading-relaxed">Record daily income, expenses, and profits without complex accounting software.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Government Schemes Section (With Visual Cards) -->
+    <section id="schemes" class="bg-slate-100 py-16 sm:py-20 border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span id="scheme-sub" class="text-xs font-bold uppercase tracking-widest text-sih-green">Financial Integration</span>
+                <h2 id="scheme-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Government Schemes Supported</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- MUDRA Card -->
+                <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col md:flex-row">
+                    <img src="https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&w=500&q=80" alt="MUDRA Loan" class="w-full md:w-48 h-48 md:h-auto object-cover">
+                    <div class="p-6 flex flex-col justify-between flex-grow">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="bg-sih-navy text-white text-[10px] font-bold px-2.5 py-1 rounded-md uppercase">MUDRA Yojana</span>
+                                <span class="text-xs font-semibold text-sih-green">Up to ₹10 Lakhs</span>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-base mb-2">Pradhan Mantri MUDRA Yojana</h3>
+                            <p id="mudra-desc" class="text-xs text-slate-600 leading-relaxed mb-4">Collateral-free micro loans categorized into Shishu (up to ₹50k), Kishore (up to ₹5L), and Tarun (up to ₹10L) for shopkeepers and artisans.</p>
+                        </div>
+                        <button onclick="populatePrompt('mudra')" id="btn-check-mudra" class="text-xs font-bold text-sih-orange hover:underline text-left flex items-center gap-1">
+                            Check Eligibility via AI <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PMEGP Card -->
+                <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col md:flex-row">
+                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=500&q=80" alt="PMEGP Scheme" class="w-full md:w-48 h-48 md:h-auto object-cover">
+                    <div class="p-6 flex flex-col justify-between flex-grow">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="bg-sih-navy text-white text-[10px] font-bold px-2.5 py-1 rounded-md uppercase">PMEGP Scheme</span>
+                                <span class="text-xs font-semibold text-sih-green">15% - 35% Subsidy</span>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-base mb-2">Prime Minister's Employment Generation</h3>
+                            <p id="pmegp-desc" class="text-xs text-slate-600 leading-relaxed mb-4">Credit-linked subsidy program aimed at generating self-employment by establishing micro-enterprises in rural areas.</p>
+                        </div>
+                        <button onclick="populatePrompt('pmegp')" id="btn-check-pmegp" class="text-xs font-bold text-sih-orange hover:underline text-left flex items-center gap-1">
+                            Check Subsidy Rate via AI <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive AI Demo Section -->
+    <section id="ai-demo" class="py-16 sm:py-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-8">
+            <span id="demo-sub" class="text-xs font-bold uppercase tracking-widest text-sih-orange">Interactive Experience</span>
+            <h2 id="demo-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Chat with Udyon AI Assistant</h2>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden flex flex-col h-[480px]">
+            <!-- Chat Header -->
+            <div class="bg-sih-navy p-4 text-white flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-sih-orange text-white flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm">Udyon AI Assistant</h3>
+                        <p id="ai-status" class="text-[10px] text-slate-300">Online | Rural Business Mode</p>
+                    </div>
+                </div>
+                <span class="text-[10px] bg-sih-green/30 border border-sih-green px-2 py-0.5 rounded-full text-green-300">Live Engine</span>
+            </div>
+
+            <!-- Chat Message Display -->
+            <div class="flex-grow p-4 overflow-y-auto space-y-3 bg-slate-50" id="chat-window">
+                <div class="flex justify-start">
+                    <div id="ai-welcome-msg" class="max-w-[85%] bg-white border border-slate-200 text-slate-800 rounded-xl rounded-bl-none p-3.5 text-xs leading-relaxed shadow-sm">
+                        Welcome! I am your <strong>Udyon AI Assistant</strong>. Ask me anything about business management, MUDRA loan eligibility, or PMEGP subsidies.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Suggestions -->
+            <div class="px-3 py-2 bg-slate-100 border-t border-slate-200 flex items-center gap-2 overflow-x-auto text-[11px]">
+                <span id="prompt-label" class="text-slate-500 font-semibold whitespace-nowrap">Try asking:</span>
+                <button onclick="populatePrompt('mudra')" id="prompt-btn-1" class="bg-white hover:bg-slate-200 border border-slate-300 px-2.5 py-1 rounded-full whitespace-nowrap text-slate-700">MUDRA Loan Criteria</button>
+                <button onclick="populatePrompt('pmegp')" id="prompt-btn-2" class="bg-white hover:bg-slate-200 border border-slate-300 px-2.5 py-1 rounded-full whitespace-nowrap text-slate-700">PMEGP Subsidy Rate</button>
+                <button onclick="populatePrompt('cash')" id="prompt-btn-3" class="bg-white hover:bg-slate-200 border border-slate-300 px-2.5 py-1 rounded-full whitespace-nowrap text-slate-700">Cash Flow Management</button>
+            </div>
+
+            <!-- Input Form -->
+            <div class="p-3 bg-white border-t border-slate-200 flex items-center gap-2">
+                <input type="text" id="chat-input" onkeypress="if(event.key === 'Enter') handleSend()" placeholder="Type your query in English, Hindi, or Punjabi..." class="flex-grow px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sih-green">
+                <button onclick="handleSend()" id="btn-send-msg" class="bg-sih-green hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                    <span>Send</span>
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+            <div>
+                <span class="font-bold text-slate-200 text-sm">Udyon AI</span>
+                <p class="text-[11px] text-slate-500 mt-0.5">&copy; 2026 Smart India Hackathon Prototype.</p>
+            </div>
+            <div class="flex items-center space-x-6">
+                <a href="#features" class="hover:text-white transition">Features</a>
+                <a href="#schemes" class="hover:text-white transition">Schemes</a>
+                <a href="#ai-demo" class="hover:text-white transition">AI Engine</a>
+                <a href="1.html#/home" class="text-sih-orange font-bold hover:underline">Vendor Portal</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Translations & Script Logic -->
+    <script>
+        let currentLang = 'en';
+
+        const i18n = {
+            en: {
+                navFeatures: "Features",
+                navSchemes: "Govt Schemes",
+                navDemo: "Live AI Demo",
+                heroBadge: "<i class='fa-solid fa-bolt'></i> AI-Powered Rural Advisory Platform",
+                heroTitle: "Empowering Rural Businesses with <span class='text-sih-orange'>AI Intelligence</span>",
+                heroDesc: "Get instant business guidance in your preferred language, check eligibility for government schemes like MUDRA & PMEGP, and manage daily cash flow effortlessly.",
+                btnLaunchAi: "Register Vendor Account",
+                btnExploreSchemes: "Vendor Sign In",
+                heroCard1Title: "Localized Business Advisory",
+                heroCard1Desc: "Tailored business strategies for regional market demands.",
+                heroCard2Title: "Collateral-Free Scheme Match",
+                heroCard2Desc: "Instant eligibility verification for MUDRA & PMEGP loans.",
+                featSub: "Core Capabilities",
+                featTitle: "Built for Rural & Micro Enterprises",
+                feat1Title: "Multilingual AI Chat",
+                feat1Desc: "Ask business queries in English, Hindi, or Punjabi and receive easy-to-understand guidance.",
+                feat2Title: "Instant Loan Check",
+                feat2Desc: "Check eligibility for MUDRA loans (Shishu, Kishore, Tarun) and PMEGP capital subsidies within seconds.",
+                feat3Title: "Cash Flow Tracker",
+                feat3Desc: "Record daily income, expenses, and profits without complex accounting software.",
+                schemeSub: "Financial Integration",
+                schemeTitle: "Government Schemes Supported",
+                mudraDesc: "Collateral-free micro loans categorized into Shishu (up to ₹50k), Kishore (up to ₹5L), and Tarun (up to ₹10L) for shopkeepers and artisans.",
+                btnCheckMudra: "Check Eligibility via AI <i class='fa-solid fa-chevron-right text-[10px]'></i>",
+                pmegpDesc: "Credit-linked subsidy program aimed at generating self-employment by establishing micro-enterprises in rural areas.",
+                btnCheckPmegp: "Check Subsidy Rate via AI <i class='fa-solid fa-chevron-right text-[10px]'></i>",
+                demoSub: "Interactive Experience",
+                demoTitle: "Chat with Udyon AI Assistant",
+                aiStatus: "Online | Rural Business Mode",
+                aiWelcome: "Welcome! I am your <strong>Udyon AI Assistant</strong>. Ask me anything about business management, MUDRA loan eligibility, or PMEGP subsidies.",
+                promptLabel: "Try asking:",
+                prompt1: "MUDRA Loan Criteria",
+                prompt2: "PMEGP Subsidy Rate",
+                prompt3: "Cash Flow Management",
+                placeholder: "Type your query in English, Hindi, or Punjabi...",
+                btnSend: "Send",
+                responses: {
+                    mudra: "MUDRA Yojana offers 3 loan categories:\n1. Shishu: Up to ₹50,000\n2. Kishore: ₹50,000 to ₹5 Lakh\n3. Tarun: ₹5 Lakh to ₹10 Lakh.\n\nNo collateral or guarantee is required.",
+                    pmegp: "Under PMEGP, rural applicants get 25% to 35% government subsidy to start new manufacturing or service businesses.",
+                    cash: "Key tips for cash flow:\n1. Record daily sales and expenses immediately.\n2. Keep customer credit strict.\n3. Save 20% of net profits in an emergency fund.",
+                    default: "I am processing your query. You can ask about MUDRA loan criteria, PMEGP subsidy rates, or small business management advice!"
+                }
+            },
+            hi: {
+                navFeatures: "खासियतें",
+                navSchemes: "सरकारी स्कीम्स",
+                navDemo: "लाइव AI डेमो",
+                heroBadge: "<i class='fa-solid fa-bolt'></i> ग्रामीण व्यवसाय AI सलाहकार",
+                heroTitle: "ग्रामीण व्यवसायों को <span class='text-sih-orange'>AI की ताकत</span>",
+                heroDesc: "अपनी पसंदीदा भाषा में बिजनेस की सलाह पाएं, MUDRA और PMEGP जैसी सरकारी स्कीमों की पात्रता जांचें और कैश फ्लो संभालें।",
+                btnLaunchAi: "वेंडर खाता पंजीकृत करें",
+                btnExploreSchemes: "साइन इन करें",
+                heroCard1Title: "स्थानीय बिजनेस सलाह",
+                heroCard1Desc: "क्षेत्रीय बाजार की मांग के लिए विशेष रणनीतियां।",
+                heroCard2Title: "बिना गारंटी लोन मैच",
+                heroCard2Desc: "मुद्रा और PMEGP लोन की पात्रता तुरंत देखें।",
+                featSub: "मुख्य विशेषताएं",
+                featTitle: "ग्रामीण उद्यमों के लिए विशेष टूल्स",
+                feat1Title: "बहुभाषी AI चैट",
+                feat1Desc: "हिंदी, अंग्रेजी या पंजाबी में सवाल पूछें और आसान भाषा में मार्गदर्शन पाएं।",
+                feat2Title: "तुरंत लोन जांच",
+                feat2Desc: "MUDRA लोन और PMEGP कैपिटल सब्सिडी की पात्रता सेकंडों में जांचें।",
+                feat3Title: "कैश फ्लो ट्रैकर",
+                feat3Desc: "दैनिक आय, खर्च और मुनाफे का रिकॉर्ड बिना किसी लेखा-जोखा झंझट के रखें।",
+                schemeSub: "वित्तीय एकीकरण",
+                schemeTitle: "समर्थित सरकारी योजनाएं",
+                mudraDesc: "दुकानदारों और कारीगरों के लिए शिशु (₹50k तक), किशोर (₹5L तक), और तरुण (₹10L तक) बिना गारंटी लोन।",
+                btnCheckMudra: "AI से पात्रता पूछें <i class='fa-solid fa-chevron-right text-[10px]'></i>",
+                pmegpDesc: "गांव में नया मैन्युफैक्चरिंग या सर्विस बिजनेस शुरू करने पर सरकारी सब्सिडी और क्रेडिट सपोर्ट।",
+                btnCheckPmegp: "AI से सब्सिडी दर पूछें <i class='fa-solid fa-chevron-right text-[10px]'></i>",
+                demoSub: "इंटरएक्टिव अनुभव",
+                demoTitle: "Udyon AI सहायक से बात करें",
+                aiStatus: "ऑनलाइन | ग्रामीण बिजनेस मोड",
+                aiWelcome: "नमस्ते! मैं आपका <strong>Udyon AI सहायक</strong> हूँ। अपने व्यवसाय, मुद्रा लोन, या PMEGP सब्सिडी के बारे में सवाल पूछें।",
+                promptLabel: "पूछकर देखें:",
+                prompt1: "मुद्रा लोन मानदंड",
+                prompt2: "PMEGP सब्सिडी दर",
+                prompt3: "कैश फ्लो प्रबंधन",
+                placeholder: "अपना प्रश्न अंग्रेजी, हिंदी या पंजाबी में लिखें...",
+                btnSend: "भेजें",
+                responses: {
+                    mudra: "MUDRA योजना के तहत 3 श्रेणियां हैं:\n1. शिशु: ₹50,000 तक\n2. किशोर: ₹50,000 से ₹5 लाख\n3. तरुण: ₹5 लाख से ₹10 लाख।\n\nइसमें किसी गारंटी की आवश्यकता नहीं होती है।",
+                    pmegp: "PMEGP योजना के तहत ग्रामीण क्षेत्रों में नया बिजनेस शुरू करने पर 25% से 35% तक सरकारी सब्सिडी मिलती है।",
+                    cash: "कैश फ्लो प्रबंधन टिप्स:\n1. रोज की बिक्री और खर्च तुरंत नोट करें।\n2. उधार का हिसाब कड़ा रखें।\n3. मुनाफे का 20% इमरजेंसी फंड में बचाएं।",
+                    default: "मैं आपके प्रश्न को प्रोसेस कर रहा हूँ। आप मुद्रा लोन, PMEGP सब्सिडी, या बिजनेस मैनेजमेंट के बारे में पूछ सकते हैं!"
+                }
+            },
+            pa: {
+                navFeatures: "ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ",
+                navSchemes: "ਸਰਕਾਰੀ ਸਕੀਮਾਂ",
+                navDemo: "ਲਾਈਵ AI ਡੈਮੋ",
+                heroBadge: "<i class='fa-solid fa-bolt'></i> ਪੇਂਡੂ ਕਾਰੋਬਾਰੀ AI ਸਲਾਹਕਾਰ",
+                heroTitle: "ਪੇਂਡੂ ਕਾਰੋਬਾਰਾਂ ਨੂੰ <span class='text-sih-orange'>AI ਦੀ ਤਾਕਤ</span>",
+                heroDesc: "ਆਪਣੀ ਪਸੰਦੀਦਾ ਭਾਸ਼ਾ ਵਿੱਚ ਕਾਰੋਬਾਰੀ ਸਲਾਹ ਲਓ, MUDRA ਅਤੇ PMEGP ਸਕੀਮਾਂ ਦੀ ਯੋਗਤਾ ਦੀ ਜਾਂਚ ਕਰੋ ਅਤੇ ਨਕਦ ਪ੍ਰਵਾਹ ਦਾ ਪ੍ਰਬੰਧ ਕਰੋ।",
+                btnLaunchAi: "ਵੈਂਡਰ ਖਾਤਾ ਰਜਿਸਟਰ ਕਰੋ",
+                btnExploreSchemes: "ਸਾਈਨ ਇਨ ਕਰੋ",
+                heroCard1Title: "ਸਥਾਨਕ ਕਾਰੋਬਾਰੀ ਸਲਾਹ",
+                heroCard1Desc: "ਖੇਤਰੀ ਬਾਜ਼ਾਰ ਦੀਆਂ ਮੰਗਾਂ ਲਈ ਵਿਸ਼ੇਸ਼ ਰਣਨੀਤੀਆਂ।",
+                heroCard2Title: "ਬਿਨਾਂ ਗਾਰੰਟੀ ਲੋਨ ਮੈਚ",
+                heroCard2Desc: "ਮੁਦਰਾ ਅਤੇ PMEGP ਲੋਨਾਂ ਦੀ ਤੁਰੰਤ ਜਾਂਚ।",
+                featSub: "ਮੁੱਖ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ",
+                featTitle: "ਪੇਂਡੂ ਉੱਦਮਾਂ ਲਈ ਵਿਸ਼ੇਸ਼ ਟੂਲ",
+                feat1Title: "ਬਹੁ-ਭਾਸ਼ਾਈ AI ਚੈਟ",
+                feat1Desc: "ਅੰਗਰੇਜ਼ੀ, ਹਿੰਦੀ ਜਾਂ ਪੰਜਾਬੀ ਵਿੱਚ ਸਵਾਲ ਪੁੱਛੋ ਅਤੇ ਸਰਲ ਮਾਰਗਦਰਸ਼ਨ ਪ੍ਰਾਪਤ ਕਰੋ।",
+                feat2Title: "ਤੁਰੰਤ ਲੋਨ ਜਾਂਚ",
+                feat2Desc: "MUDRA ਲੋਨ ਅਤੇ PMEGP ਸਬਸਿਡੀ ਦੀ ਯੋਗਤਾ ਸਕਿੰਟਾਂ ਵਿੱਚ ਚੈੱਕ ਕਰੋ।",
+                feat3Title: "ਕੈਸ਼ ਫਲੋ ਟ੍ਰੈਕਰ",
+                feat3Desc: "ਰੋਜ਼ਾਨਾ ਆਮਦਨ, ਖਰਚਿਆਂ ਅਤੇ ਮੁਨਾਫੇ ਦਾ ਰਿਕਾਰਡ ਆਸਾਨੀ ਨਾਲ ਰੱਖੋ।",
+                schemeSub: "ਵਿੱਤੀ ਏਕੀਕਰਣ",
+                schemeTitle: "ਸਮਰਥਿਤ ਸਰਕਾਰੀ ਸਕੀਮਾਂ",
+                mudraDesc: "ਦੁਕਾਨਦਾਰਾਂ ਲਈ ਸ਼ਿਸ਼ੂ (₹50k ਤੱਕ), ਕਿਸ਼ੋਰ (₹5L ਤੱਕ), ਅਤੇ ਤਰੁਣ (₹10L ਤੱਕ) ਬਿਨਾਂ ਗਾਰੰਟੀ ਲੋਨ।",
+                btnCheckMudra: "AI ਤੋਂ ਯੋਗਤਾ ਪੁੱਛੋ <i class='fa-solid fa-chevron-right text-[10px]'></i>",
+                pmegpDesc: "ਪਿੰਡ ਵਿੱਚ ਨਵਾਂ ਕਾਰੋਬਾਰ ਸ਼ੁਰੂ ਕਰਨ 'ਤੇ ਸਰਕਾਰੀ ਸਬਸਿਡੀ ਅਤੇ ਕ੍ਰੈਡਿਟ ਸਹਾਇਤਾ।",
+                btnCheckPmegp: "AI ਤੋਂ ਸਬਸਿਡੀ ਦਰ ਪੁੱਛੋ <i class='fa-solid fa-chevron-right text-[10px]'></i>",
+                demoSub: "ਇੰਟਰਐਕਟਿਵ ਅਨੁਭਵ",
+                demoTitle: "Udyon AI ਸਹਾਇਕ ਨਾਲ ਗੱਲ ਕਰੋ",
+                aiStatus: "ਆਨਲਾਈਨ | ਪੇਂਡੂ ਕਾਰੋਬਾਰ ਮੋਡ",
+                aiWelcome: "ਜੀ ਆਇਆਂ ਨੂੰ! ਮੈਂ ਤੁਹਾਡਾ <strong>Udyon AI ਸਹਾਇਕ</strong> ਹਾਂ। ਆਪਣੇ ਕਾਰੋਬਾਰ, ਮੁਦਰਾ ਲੋਨ, ਜਾਂ PMEGP ਸਬਸਿਡੀ ਬਾਰੇ ਪੁੱਛੋ।",
+                promptLabel: "ਪੁੱਛ ਕੇ ਦੇਖੋ:",
+                prompt1: "ਮੁਦਰਾ ਲੋਨ ਦੇ ਨਿਯਮ",
+                prompt2: "PMEGP ਸਬਸਿਡੀ ਦਰ",
+                prompt3: "ਕੈਸ਼ ਫਲੋ ਪ੍ਰਬੰਧਨ",
+                placeholder: "ਆਪਣਾ ਸਵਾਲ ਅੰਗਰੇਜ਼ੀ, ਹਿੰਦੀ ਜਾਂ ਪੰਜਾਬੀ ਵਿੱਚ ਲਿਖੋ...",
+                btnSend: "ਭੇਜੋ",
+                responses: {
+                    mudra: "MUDRA ਸਕੀਮ ਵਿੱਚ 3 ਸ਼੍ਰੇਣੀਆਂ ਹਨ:\n1. ਸ਼ਿਸ਼ੂ: ₹50,000 ਤੱਕ\n2. ਕਿਸ਼ੋਰ: ₹50,000 ਤੋਂ ₹5 ਲੱਖ\n3. ਤਰੁਣ: ₹5 ਲੱਖ ਤੋਂ ₹10 ਲੱਖ।\n\nਕਿਸੇ ਗਾਰੰਟੀ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ।",
+                    pmegp: "PMEGP ਸਕੀਮ ਤਹਿਤ ਪੇਂਡੂ ਖੇਤਰਾਂ ਵਿੱਚ ਨਵਾਂ ਕਾਰੋਬਾਰ ਸ਼ੁਰੂ ਕਰਨ 'ਤੇ 25% ਤੋਂ 35% ਸਰਕਾਰੀ ਸਬਸਿਡੀ ਮਿਲਦੀ ਹੈ।",
+                    cash: "ਕੈਸ਼ ਫਲੋ ਪ੍ਰਬੰਧਨ ਸੁਝਾਅ:\n1. ਰੋਜ਼ਾਨਾ ਵਿਕਰੀ ਅਤੇ ਖਰਚੇ ਤੁਰੰਤ ਨੋਟ ਕਰੋ।\n2. ਉਧਾਰ ਦਾ ਹਿਸਾਬ ਪੱਕਾ ਰੱਖੋ।\n3. ਮੁਨਾਫੇ ਦਾ 20% ਐਮਰਜੈਂਸੀ ਫੰਡ ਵਿੱਚ ਬਚਾਓ।",
+                    default: "ਮੈਂ ਤੁਹਾਡੇ ਸਵਾਲ ਦੀ ਪ੍ਰੋਸੈਸਿੰਗ ਕਰ ਰਿਹਾ ਹਾਂ। ਤੁਸੀਂ ਮੁਦਰਾ ਲੋਨ, PMEGP ਸਬਸਿਡੀ, ਜਾਂ ਕਾਰੋਬਾਰ ਪ੍ਰਬੰਧਨ ਬਾਰੇ ਪੁੱਛ ਸਕਦੇ ਹੋ!"
+                }
+            }
+        };
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            const text = i18n[lang];
+
+            document.getElementById('nav-features').innerText = text.navFeatures;
+            document.getElementById('nav-schemes').innerText = text.navSchemes;
+            document.getElementById('nav-demo').innerText = text.navDemo;
+            
+            document.getElementById('hero-badge').innerHTML = text.heroBadge;
+            document.getElementById('hero-title').innerHTML = text.heroTitle;
+            document.getElementById('hero-desc').innerText = text.heroDesc;
+            document.getElementById('btn-launch-ai').querySelector('span').innerText = text.btnLaunchAi;
+            document.getElementById('btn-explore-schemes').innerText = text.btnExploreSchemes;
+            
+            document.getElementById('hero-card1-title').innerText = text.heroCard1Title;
+            document.getElementById('hero-card1-desc').innerText = text.heroCard1Desc;
+            document.getElementById('hero-card2-title').innerText = text.heroCard2Title;
+            document.getElementById('hero-card2-desc').innerText = text.heroCard2Desc;
+
+            document.getElementById('feat-sub').innerText = text.featSub;
+            document.getElementById('feat-title').innerText = text.featTitle;
+            document.getElementById('feat1-title').innerText = text.feat1Title;
+            document.getElementById('feat1-desc').innerText = text.feat1Desc;
+            document.getElementById('feat2-title').innerText = text.feat2Title;
+            document.getElementById('feat2-desc').innerText = text.feat2Desc;
+            document.getElementById('feat3-title').innerText = text.feat3Title;
+            document.getElementById('feat3-desc').innerText = text.feat3Desc;
+
+            document.getElementById('scheme-sub').innerText = text.schemeSub;
+            document.getElementById('scheme-title').innerText = text.schemeTitle;
+            document.getElementById('mudra-desc').innerText = text.mudraDesc;
+            document.getElementById('btn-check-mudra').innerHTML = text.btnCheckMudra;
+            document.getElementById('pmegp-desc').innerText = text.pmegpDesc;
+            document.getElementById('btn-check-pmegp').innerHTML = text.btnCheckPmegp;
+
+            document.getElementById('demo-sub').innerText = text.demoSub;
+            document.getElementById('demo-title').innerText = text.demoTitle;
+            document.getElementById('ai-status').innerText = text.aiStatus;
+            document.getElementById('ai-welcome-msg').innerHTML = text.aiWelcome;
+            
+            document.getElementById('prompt-label').innerText = text.promptLabel;
+            document.getElementById('prompt-btn-1').innerText = text.prompt1;
+            document.getElementById('prompt-btn-2').innerText = text.prompt2;
+            document.getElementById('prompt-btn-3').innerText = text.prompt3;
+
+            document.getElementById('chat-input').placeholder = text.placeholder;
+            document.getElementById('btn-send-msg').querySelector('span').innerText = text.btnSend;
+        }
+
+        function populatePrompt(type) {
+            const promptMap = {
+                mudra: i18n[currentLang].prompt1,
+                pmegp: i18n[currentLang].prompt2,
+                cash: i18n[currentLang].prompt3
+            };
+            document.getElementById('chat-input').value = promptMap[type] || type;
+            handleSend(type);
+        }
+
+        function handleSend(forcedType = null) {
+            const input = document.getElementById('chat-input');
+            const query = input.value.trim();
+            if (!query) return;
+
+            const chatWindow = document.getElementById('chat-window');
+
+            const userBubble = `
+                <div class="flex justify-end">
+                    <div class="max-w-[85%] bg-sih-navy text-white rounded-xl rounded-br-none p-3 text-xs leading-relaxed shadow-sm">
+                        ${escapeHtml(query)}
+                    </div>
+                </div>`;
+            chatWindow.insertAdjacentHTML('beforeend', userBubble);
+            input.value = '';
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            const langData = i18n[currentLang];
+            let replyText = langData.responses.default;
+            const lower = query.toLowerCase();
+
+            if (forcedType === 'mudra' || lower.includes('mudra')) {
+                replyText = langData.responses.mudra;
+            } else if (forcedType === 'pmegp' || lower.includes('pmegp') || lower.includes('subsidy')) {
+                replyText = langData.responses.pmegp;
+            } else if (forcedType === 'cash' || lower.includes('cash') || lower.includes('flow')) {
+                replyText = langData.responses.cash;
+            }
+
+            setTimeout(() => {
+                const aiBubble = `
+                    <div class="flex justify-start">
+                        <div class="max-w-[85%] bg-white border border-slate-200 text-slate-800 rounded-xl rounded-bl-none p-3.5 text-xs leading-relaxed shadow-sm">
+                            ${replyText.replace(/\n/g, '<br>')}
+                        </div>
+                    </div>`;
+                chatWindow.insertAdjacentHTML('beforeend', aiBubble);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }, 400);
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
+</body>
+</html>
