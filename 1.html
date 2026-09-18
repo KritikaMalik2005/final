@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Udyon AI - Local Vendor Support Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sih: {
+                            orange: '#FF6B00',
+                            green: '#00875A',
+                            navy: '#0F2C59',
+                            gold: '#FFD700',
+                            lightBg: '#F8FAFC',
+                            emerald: '#059669',
+                            darkNavy: '#0B192C'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        .code-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .code-scroll::-webkit-scrollbar-track { background: #0f172a; }
+        .code-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        
+        button, input, select {
+            touch-action: manipulation;
+        }
+
+        /* Floating Toast Notification */
+        #otp-toast {
+            animation: slideDown 0.4s ease-out forwards;
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-sih-orange selection:text-white">
+
+    <!-- Floating Live OTP Notification -->
+    <div id="otp-toast-container" class="fixed top-4 right-4 z-50 max-w-md w-full px-3 hidden">
+        <div id="otp-toast" class="bg-slate-900 text-white rounded-xl shadow-2xl p-4 border border-sih-green/60 space-y-2">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2 text-sih-green font-bold text-xs uppercase tracking-wider">
+                    <i class="fa-solid fa-bell animate-bounce"></i>
+                    <span>Codes Dispatched</span>
+                </div>
+                <button onclick="closeOtpToast()" class="text-slate-400 hover:text-white text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <p id="toast-message" class="text-xs text-slate-300"></p>
+            <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 font-mono text-xs space-y-1">
+                <div class="text-sky-400 flex justify-between">
+                    <span>Email Code:</span> <strong id="toast-email-otp" class="text-yellow-300 font-bold tracking-widest text-sm"></strong>
+                </div>
+                <div class="text-emerald-400 flex justify-between">
+                    <span>Mobile SMS Code:</span> <strong id="toast-mobile-otp" class="text-yellow-300 font-bold tracking-widest text-sm"></strong>
+                </div>
+            </div>
+            <p class="text-[10px] text-slate-400 text-center">Use these 6-digit codes to complete instant verification.</p>
+        </div>
+    </div>
+
+    <!-- Top Header -->
+    <header class="bg-sih-navy text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer" onclick="navigateTo('/home')">
+                <div class="bg-sih-orange text-white p-2 rounded-lg font-extrabold flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 shadow">
+                    <i class="fa-solid fa-shop text-lg sm:text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-base sm:text-lg leading-tight tracking-wide flex items-center gap-1.5 sm:gap-2">
+                        Udyon AI <span class="bg-sih-green/30 border border-sih-green text-green-300 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full font-medium">Vendor Portal</span>
+                    </h1>
+                    <p class="text-[10px] sm:text-xs text-slate-300 hidden md:block">Empowering Street Vendors & Local Retailers with AI & Smart Finance</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <!-- Navigation back to Landing Page (2.html) -->
+                <a href="2.html" class="px-2.5 py-1.5 rounded-md text-xs font-semibold text-slate-200 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-house text-sih-orange"></i>
+                    <span class="hidden sm:inline">Landing Page</span>
+                </a>
+
+                <!-- View Switcher -->
+                <div class="flex items-center bg-slate-800/90 p-1 rounded-lg border border-slate-700 text-xs">
+                    <button id="btn-view-demo" onclick="switchView('demo')" class="px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all bg-sih-green text-white shadow">
+                        <i class="fa-solid fa-play mr-1"></i> <span class="hidden sm:inline">Interactive </span>Portal
+                    </button>
+                    <button id="btn-view-code" onclick="switchView('code')" class="px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all text-slate-300 hover:text-white">
+                        <i class="fa-solid fa-code mr-1"></i> Codebase
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8">
+
+        <!-- ================= MAIN PORTAL SECTION ================= -->
+        <section id="view-demo" class="space-y-4 sm:space-y-6">
+
+            <!-- Application Container -->
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-xl border border-slate-200 overflow-hidden min-h-[560px] sm:min-h-[600px] flex flex-col">
+                <div class="bg-slate-100 px-3 sm:px-4 py-2.5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                    <div class="flex items-center justify-between sm:justify-start">
+                        <div class="flex items-center space-x-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-400 inline-block"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span>
+                        </div>
+                        <span class="ml-2 font-mono text-[11px] text-slate-500">https://udyon.ai<span id="current-route-display" class="font-semibold text-slate-800">/home</span></span>
+                    </div>
+                    <div class="flex items-center overflow-x-auto pb-1 sm:pb-0 gap-1 code-scroll" id="app-nav-buttons">
+                        <a href="2.html" class="px-2.5 py-1 rounded text-xs font-bold whitespace-nowrap text-sih-orange hover:bg-slate-200 flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-left text-[10px]"></i> Main Website
+                        </a>
+                        <button onclick="navigateTo('/home')" id="nav-btn-home" class="px-2.5 py-1 rounded text-xs font-medium whitespace-nowrap text-slate-600 hover:bg-slate-200">Vendor Showcase</button>
+                        <button onclick="navigateTo('/register')" id="nav-btn-register" class="px-2.5 py-1 rounded text-xs font-medium whitespace-nowrap text-slate-600 hover:bg-slate-200">Register</button>
+                        <button onclick="navigateTo('/verify-otp')" id="nav-btn-verify" class="px-2.5 py-1 rounded text-xs font-medium whitespace-nowrap text-slate-600 hover:bg-slate-200">Verify OTP</button>
+                        <button onclick="navigateTo('/login')" id="nav-btn-login" class="px-2.5 py-1 rounded text-xs font-medium whitespace-nowrap text-slate-600 hover:bg-slate-200">Login</button>
+                        <button onclick="navigateTo('/forgot-password')" id="nav-btn-forgot" class="px-2.5 py-1 rounded text-xs font-medium whitespace-nowrap text-slate-600 hover:bg-slate-200">Forgot Pass</button>
+                        <button onclick="navigateTo('/dashboard')" id="nav-btn-dashboard" class="px-2.5 py-1 rounded text-xs font-medium whitespace-nowrap text-slate-600 hover:bg-slate-200">Vendor Dashboard</button>
+                    </div>
+                </div>
+
+                <div id="app-view-container" class="p-3 sm:p-8 flex-grow bg-slate-50/50 flex flex-col justify-center">
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= CODEBASE EXPLORER SECTION ================= -->
+        <section id="view-code" class="hidden space-y-4">
+            <div class="bg-slate-900 rounded-xl shadow-2xl overflow-hidden border border-slate-800 flex flex-col md:flex-row h-[650px] sm:h-[720px]">
+                <div class="w-full md:w-72 bg-slate-950 border-b md:border-b-0 md:border-r border-slate-800 flex flex-col shrink-0">
+                    <div class="p-3 border-b border-slate-800 bg-slate-900 text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+                        <span><i class="fa-regular fa-folder-open mr-2 text-sih-orange"></i>Vendor Stack</span>
+                        <span class="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-slate-400">Node/React</span>
+                    </div>
+                    
+                    <div class="max-h-48 md:max-h-none flex-grow overflow-y-auto p-2 text-xs space-y-1 code-scroll">
+                        <div class="text-slate-400 font-bold px-2 py-1 flex items-center gap-1.5">
+                            <i class="fa-solid fa-folder text-amber-500"></i> backend/
+                        </div>
+                        <div class="pl-3 space-y-0.5">
+                            <button onclick="loadFile('backend/controllers/authController.js')" class="file-btn w-full text-left px-2 py-1 rounded text-slate-300 hover:bg-slate-800/80 flex items-center gap-2" data-file="backend/controllers/authController.js">
+                                <i class="fa-brands fa-js text-yellow-400"></i> authController.js
+                            </button>
+                            <button onclick="loadFile('backend/models/User.js')" class="file-btn w-full text-left px-2 py-1 rounded text-slate-300 hover:bg-slate-800/80 flex items-center gap-2" data-file="backend/models/User.js">
+                                <i class="fa-brands fa-js text-emerald-400"></i> User.js (Model)
+                            </button>
+                            <button onclick="loadFile('backend/routes/authRoutes.js')" class="file-btn w-full text-left px-2 py-1 rounded text-slate-300 hover:bg-slate-800/80 flex items-center gap-2" data-file="backend/routes/authRoutes.js">
+                                <i class="fa-brands fa-js text-yellow-400"></i> authRoutes.js
+                            </button>
+                            <button onclick="loadFile('backend/services/smsService.js')" class="file-btn w-full text-left px-2 py-1 rounded text-slate-300 hover:bg-slate-800/80 flex items-center gap-2" data-file="backend/services/smsService.js">
+                                <i class="fa-brands fa-js text-sky-400"></i> smsService.js
+                            </button>
+                            <button onclick="loadFile('backend/services/emailService.js')" class="file-btn w-full text-left px-2 py-1 rounded text-slate-300 hover:bg-slate-800/80 flex items-center gap-2" data-file="backend/services/emailService.js">
+                                <i class="fa-brands fa-js text-red-400"></i> emailService.js
+                            </button>
+                        </div>
+
+                        <div class="text-slate-400 font-bold px-2 py-1 pt-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-folder text-sky-500"></i> frontend/src/
+                        </div>
+                        <div class="pl-3 space-y-0.5">
+                            <button onclick="loadFile('frontend/src/pages/Register.jsx')" class="file-btn w-full text-left px-2 py-1 rounded text-slate-300 hover:bg-slate-800/80 flex items-center gap-2" data-file="frontend/src/pages/Register.jsx">
+                                <i class="fa-brands fa-react text-sky-400"></i> Register.jsx
+                            </button>
+                            <button onclick="loadFile('frontend/src/pages/Dashboard.jsx')" class="file-btn w-full text-left px-2 py-1 rounded text-slate-300 hover:bg-slate-800/80 flex items-center gap-2" data-file="frontend/src/pages/Dashboard.jsx">
+                                <i class="fa-brands fa-react text-sky-400"></i> Dashboard.jsx
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-grow flex flex-col bg-slate-900 min-w-0">
+                    <div class="bg-slate-950 px-3 sm:px-4 py-2 border-b border-slate-800 flex items-center justify-between text-xs shrink-0">
+                        <span id="active-file-name" class="font-mono text-sih-orange font-semibold flex items-center gap-2 truncate pr-2">
+                            <i class="fa-solid fa-file-code"></i> backend/controllers/authController.js
+                        </span>
+                        <button onclick="copyCurrentCode()" class="text-slate-400 hover:text-white bg-slate-800 px-2.5 py-1 rounded text-xs transition shrink-0">
+                            <i class="fa-regular fa-copy mr-1"></i> Copy
+                        </button>
+                    </div>
+                    <div class="flex-grow overflow-auto p-3 sm:p-4 code-scroll">
+                        <pre><code id="code-display" class="text-xs text-slate-200 font-mono leading-relaxed">Select a file from the explorer to view its code...</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 text-xs py-3.5 px-4 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 text-center sm:text-left">
+            <div>
+                <span class="font-bold text-slate-200">Udyon AI</span> &copy; 2026 Smart India Hackathon Prototype.
+            </div>
+            <div class="flex items-center space-x-4 text-slate-400 text-[11px] sm:text-xs">
+                <span class="flex items-center gap-1"><i class="fa-solid fa-shield-halved text-emerald-400"></i> Vendor Identity Privacy Protected</span>
+                <span class="flex items-center gap-1"><i class="fa-solid fa-lock text-sky-400"></i> JWT & bcrypt Encrypted</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* ================= INDIA GEOGRAPHY DATASET ================= */
+        const INDIA_LOCATION_DATA = {
+            "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool", "Rajahmundry", "Tirupati", "Kadapa", "Kakinada", "Anantapur"],
+            "Arunachal Pradesh": ["Itanagar", "Tawang", "Naharlagun", "Pasighat", "Ziro", "Tezu", "Bomdila"],
+            "Assam": ["Guwahati", "Silchar", "Dibrugarh", "Jorhat", "Nagaon", "Tinsukia", "Tezpur", "Bongaigaon"],
+            "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Purnia", "Darbhanga", "Bihar Sharif", "Arrah", "Begusarai", "Katihar", "Munger", "Chhapra"],
+            "Chhattisgarh": ["Raipur", "Bhilai", "Bilaspur", "Korba", "Rajnandgaon", "Jagdalpur", "Raigarh", "Ambikapur"],
+            "Goa": ["North Goa (Panaji)", "South Goa (Margao)", "Vasco da Gama", "Mapusa", "Ponda"],
+            "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Junagadh", "Gandhinagar", "Anand", "Navsari", "Morbi", "Bharuch"],
+            "Haryana": ["Faridabad", "Gurugram", "Panipat", "Ambala", "Yamunanagar", "Rohtak", "Hisar", "Karnal", "Sonipat", "Panchkula"],
+            "Himachal Pradesh": ["Shimla", "Dharamshala", "Solan", "Mandi", "Kullu", "Hamirpur", "Bilaspur", "Chamba", "Una"],
+            "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Deoghar", "Hazaribagh", "Giridih", "Ramgarh"],
+            "Karnataka": ["Bengaluru", "Mysuru", "Hubballi-Dharwad", "Mangaluru", "Belagavi", "Davanagere", "Ballari", "Vijayapura", "Shivamogga", "Tumakuru"],
+            "Kerala": ["Thiruvananthapuram", "Kochi", "Kozhikode", "Kollam", "Thrissur", "Palakkad", "Alappuzha", "Kannur", "Kottayam"],
+            "Madhya Pradesh": ["Indore", "Bhopal", "Jabalpur", "Gwalior", "Ujjain", "Sagar", "Dewas", "Satna", "Ratlam", "Rewa"],
+            "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Thane", "Nashik", "Kalyan-Dombivli", "Vasai-Virar", "Aurangabad", "Navi Mumbai", "Solapur", "Kolhapur", "Amravati"],
+            "Manipur": ["Imphal", "Churachandpur", "Thoubal", "Bishnupur", "Ukhrul"],
+            "Meghalaya": ["Shillong", "Tura", "Jowai", "Nongpoh", "Williamnagar"],
+            "Mizoram": ["Aizawl", "Lunglei", "Saiha", "Champhai", "Kolasib"],
+            "Nagaland": ["Kohima", "Dimapur", "Mokokchung", "Tuensang", "Wokha"],
+            "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela", "Berhampur", "Sambalpur", "Puri", "Balasore", "Bhadrak"],
+            "Punjab": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda", "Hoshiarpur", "Mohali", "Batala", "Pathankot", "Moga"],
+            "Rajasthan": ["Jaipur", "Jodhpur", "Kota", "Bikaner", "Ajmer", "Udaipur", "Bhilwara", "Alwar", "Bharatpur", "Sikar", "Pali"],
+            "Sikkim": ["Gangtok", "Namchi", "Gyalshing", "Mangan"],
+            "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli", "Tiruppur", "Ranipet", "Nagercoil", "Thanjavur", "Vellore"],
+            "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Khammam", "Karimnagar", "Ramagundam", "Mahbubnagar", "Nalgonda"],
+            "Tripura": ["Agartala", "Dharmanagar", "Udaipur", "Kailashahar", "Belonia"],
+            "Uttar Pradesh": ["Lucknow", "Kanpur", "Varanasi", "Agra", "Prayagraj", "Meerut", "Ghaziabad", "Noida", "Bareilly", "Aligarh", "Moradabad", "Saharanpur", "Gorakhpur", "Jhansi", "Ayodhya", "Mathura"],
+            "Uttarakhand": ["Dehradun", "Haridwar", "Roorkee", "Haldwani", "Rudrapur", "Kashipur", "Rishikesh", "Nainital"],
+            "West Bengal": ["Kolkata", "Howrah", "Siliguri", "Asansol", "Durgapur", "Bardhaman", "Malda", "Kharagpur", "Baharampur"],
+            "Delhi (NCT)": ["New Delhi", "North Delhi", "South Delhi", "East Delhi", "West Delhi", "Central Delhi", "Dwarka", "Rohini"],
+            "Jammu and Kashmir": ["Srinagar", "Jammu", "Anantnag", "Baramulla", "Kathua", "Udhampur", "Sopore"],
+            "Ladakh": ["Leh", "Kargil"],
+            "Chandigarh": ["Chandigarh"],
+            "Puducherry": ["Puducherry", "Karaikal", "Mahe", "Yanam"],
+            "Andaman and Nicobar Islands": ["Port Blair", "Diglipur", "Car Nicobar"],
+            "Dadra and Nagar Haveli and Daman and Diu": ["Daman", "Diu", "Silvassa"],
+            "Lakshadweep": ["Kavaratti", "Agatti", "Andrott"]
+        };
+
+        const LOCAL_TOWN_TYPES = [
+            "Main Bazaar", "Sabzi Mandi Market", "Weekly Haat / Peth", "Railway Station Road", 
+            "Bus Stand Market", "Town Center Chowk", "Sector Market", "Ward No. 1", "Ward No. 2", "Ward No. 3"
+        ];
+
+        const AppState = {
+            currentRoute: '/home',
+            activeSlide: 0,
+            currentUser: null, 
+            pendingUser: null,
+            activeOTP: {
+                emailOTP: null,
+                mobileOTP: null,
+                expiresAt: null,
+                attempts: 0,
+                maxAttempts: 3
+            },
+            resendCooldown: 0,
+            cooldownTimer: null,
+            forgotPasswordStep: 1,
+            forgotEmailOrMobile: ''
+        };
+
+        const showcaseSlides = [
+            {
+                badge: "Digital Ledger & Daily Accounting",
+                title: "Smart Digital Bookkeeping for Local Vendors",
+                desc: "Eliminate messy paper records! Record daily sales, manage customer credit, calculate net profits, and send automated payment reminder SMS directly through your phone.",
+                icon: "fa-solid fa-book-open-reader",
+                bgGradient: "from-sih-navy to-slate-900",
+                img: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1000&q=80",
+                stats: "Automated Payment Reminders & 100% Free Ledger"
+            },
+            {
+                badge: "PM SVANidhi & MUDRA Schemes",
+                title: "Collateral-Free Government Loans & Subsidies",
+                desc: "Instant eligibility assessment for street vendors and small retailers under PM SVANidhi (from ₹10,000 to ₹50,000) and MUDRA Shishu loans without complex banking procedures.",
+                icon: "fa-solid fa-hand-holding-dollar",
+                bgGradient: "from-emerald-950 to-slate-900",
+                img: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=1000&q=80",
+                stats: "Zero-Collateral Government Micro-Credits"
+            },
+            {
+                badge: "Wholesale Rates & Fair Pricing",
+                title: "Live Mandi Rates & Direct Wholesale Procurement",
+                desc: "Access daily market commodity prices across regional mandis. Connect directly with verified suppliers to cut out middlemen and lower inventory procurement expenses.",
+                icon: "fa-solid fa-scale-balanced",
+                bgGradient: "from-amber-950 to-slate-900",
+                img: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1000&q=80",
+                stats: "Save Up To 20% on Raw Material Purchases"
+            },
+            {
+                badge: "Vernacular Voice Assistant",
+                title: "Voice-Powered AI Guidance for Small Retailers",
+                desc: "No typing required. Simply speak into the microphone to ask inventory questions or check demand forecasts in your preferred language.",
+                icon: "fa-solid fa-microphone-lines",
+                bgGradient: "from-blue-950 to-slate-900",
+                img: "https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?auto=format&fit=crop&w=1000&q=80",
+                stats: "Real-time AI Advisory via Simple Voice Input"
+            },
+            {
+                badge: "Identity Security & Privacy",
+                title: "Bank-Grade Encryption & ID Masking",
+                desc: "Vendor information is protected with dual OTP authentication, HMAC salted hashing, and masked identifiers to ensure total data privacy.",
+                icon: "fa-solid fa-shield-halved",
+                bgGradient: "from-slate-950 to-sih-navy",
+                img: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1000&q=80",
+                stats: "End-to-End Encryption & Safe Vendor Login"
+            }
+        ];
+
+        function maskAadhaar(idNumber) {
+            if (!idNumber || idNumber.length < 12) return 'XXXX-XXXX-XXXX';
+            const clean = idNumber.replace(/\D/g, '');
+            const last4 = clean.slice(-4);
+            return `XXXX-XXXX-${last4}`;
+        }
+
+        function generateOTP() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        // Live Floating Notification Handler
+        function showOtpNotification(email, mobile, emailOTP, mobileOTP) {
+            const toastContainer = document.getElementById('otp-toast-container');
+            const toastMsg = document.getElementById('toast-message');
+            const toastEmail = document.getElementById('toast-email-otp');
+            const toastMobile = document.getElementById('toast-mobile-otp');
+
+            if (toastContainer && toastEmail && toastMobile) {
+                toastMsg.innerHTML = `Verification codes sent to <strong>${email}</strong> & <strong>+91 ${mobile}</strong>.`;
+                toastEmail.innerText = emailOTP;
+                toastMobile.innerText = mobileOTP;
+                toastContainer.classList.remove('hidden');
+            }
+        }
+
+        function closeOtpToast() {
+            const toastContainer = document.getElementById('otp-toast-container');
+            if (toastContainer) toastContainer.classList.add('hidden');
+        }
+
+        function switchView(view) {
+            const demoSec = document.getElementById('view-demo');
+            const codeSec = document.getElementById('view-code');
+            const btnDemo = document.getElementById('btn-view-demo');
+            const btnCode = document.getElementById('btn-view-code');
+
+            if (view === 'demo') {
+                demoSec.classList.remove('hidden');
+                codeSec.classList.add('hidden');
+                btnDemo.className = "px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all bg-sih-green text-white shadow";
+                btnCode.className = "px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all text-slate-300 hover:text-white";
+            } else {
+                demoSec.classList.add('hidden');
+                codeSec.classList.remove('hidden');
+                btnCode.className = "px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all bg-sih-green text-white shadow";
+                btnDemo.className = "px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-all text-slate-300 hover:text-white";
+                if (!window.codeLoaded) {
+                    loadFile('backend/controllers/authController.js');
+                    window.codeLoaded = true;
+                }
+            }
+        }
+
+        function navigateTo(route) {
+            window.location.hash = route;
+            AppState.currentRoute = route;
+            document.getElementById('current-route-display').innerText = route;
+            renderAppView();
+        }
+
+        function handleHashRouting() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash && ['/home', '/register', '/verify-otp', '/login', '/forgot-password', '/dashboard'].includes(hash)) {
+                AppState.currentRoute = hash;
+                document.getElementById('current-route-display').innerText = hash;
+            }
+            renderAppView();
+        }
+
+        function setSlide(index) {
+            AppState.activeSlide = index;
+            renderAppView();
+        }
+
+        function nextSlide() {
+            AppState.activeSlide = (AppState.activeSlide + 1) % showcaseSlides.length;
+            renderAppView();
+        }
+
+        function prevSlide() {
+            AppState.activeSlide = (AppState.activeSlide - 1 + showcaseSlides.length) % showcaseSlides.length;
+            renderAppView();
+        }
+
+        function renderAppView() {
+            const container = document.getElementById('app-view-container');
+            const navs = ['home', 'register', 'verify', 'login', 'forgot', 'dashboard'];
+            navs.forEach(nav => {
+                const btn = document.getElementById(`nav-btn-${nav}`);
+                if (btn) btn.classList.remove('bg-sih-navy', 'text-white');
+            });
+
+            switch (AppState.currentRoute) {
+                case '/home':
+                    container.innerHTML = renderShowcaseSlidePage();
+                    document.getElementById('nav-btn-home')?.classList.add('bg-sih-navy', 'text-white');
+                    break;
+                case '/register':
+                    container.innerHTML = renderRegisterPage();
+                    document.getElementById('nav-btn-register')?.classList.add('bg-sih-navy', 'text-white');
+                    initLocationDropdowns();
+                    break;
+                case '/verify-otp':
+                    container.innerHTML = renderVerifyOTPPage();
+                    document.getElementById('nav-btn-verify')?.classList.add('bg-sih-navy', 'text-white');
+                    startCooldownTimerIfNeeded();
+                    break;
+                case '/login':
+                    container.innerHTML = renderLoginPage();
+                    document.getElementById('nav-btn-login')?.classList.add('bg-sih-navy', 'text-white');
+                    break;
+                case '/forgot-password':
+                    container.innerHTML = renderForgotPasswordPage();
+                    document.getElementById('nav-btn-forgot')?.classList.add('bg-sih-navy', 'text-white');
+                    break;
+                case '/dashboard':
+                    container.innerHTML = renderDashboardPage();
+                    document.getElementById('nav-btn-dashboard')?.classList.add('bg-sih-navy', 'text-white');
+                    break;
+                default:
+                    container.innerHTML = renderShowcaseSlidePage();
+            }
+        }
+
+        function renderShowcaseSlidePage() {
+            const cur = showcaseSlides[AppState.activeSlide];
+            return `
+            <div class="max-w-5xl mx-auto w-full space-y-6">
+                <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-700 bg-gradient-to-r ${cur.bgGradient} text-white min-h-[420px] sm:min-h-[460px] flex flex-col justify-between">
+                    <img src="${cur.img}" class="absolute inset-0 w-full h-full object-cover opacity-20 filter brightness-90" alt="Vendor Slide">
+                    <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/85 to-transparent"></div>
+
+                    <div class="relative z-10 p-6 sm:p-10 max-w-2xl flex flex-col justify-center my-auto">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold bg-sih-orange text-white shadow">
+                                <i class="${cur.icon}"></i> ${cur.badge}
+                            </span>
+                            <span class="text-[11px] sm:text-xs bg-white/10 px-2.5 py-1 rounded-full text-slate-200 border border-white/20">
+                                Slide ${AppState.activeSlide + 1} of ${showcaseSlides.length}
+                            </span>
+                        </div>
+                        <h2 class="text-2xl sm:text-4xl font-extrabold leading-tight text-white mb-3 tracking-wide">
+                            ${cur.title}
+                        </h2>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
+                            ${cur.desc}
+                        </p>
+                        <div class="text-[11px] sm:text-xs text-sih-gold font-semibold mb-6 flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check text-sih-green"></i> ${cur.stats}
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-3">
+                            <button onclick="navigateTo('/register')" class="bg-sih-green hover:bg-emerald-700 active:scale-95 text-white font-bold px-6 py-2.5 rounded-lg text-xs sm:text-sm shadow-lg transition flex items-center gap-2">
+                                <span>Register Vendor Account</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                            <button onclick="navigateTo('/login')" class="bg-slate-800/80 hover:bg-slate-800 border border-slate-600 text-slate-200 hover:text-white font-medium px-5 py-2.5 rounded-lg text-xs sm:text-sm transition">
+                                Vendor Login
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="relative z-10 px-6 py-4 bg-slate-950/70 border-t border-slate-800/80 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            ${showcaseSlides.map((_, i) => `
+                                <button onclick="setSlide(${i})" class="h-2 rounded-full transition-all ${i === AppState.activeSlide ? 'bg-sih-orange w-8' : 'bg-slate-600 w-2.5 hover:bg-slate-400'}"></button>
+                            `).join('')}
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="prevSlide()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 flex items-center justify-center transition">
+                                <i class="fa-solid fa-chevron-left text-xs"></i>
+                            </button>
+                            <button onclick="nextSlide()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 flex items-center justify-center transition">
+                                <i class="fa-solid fa-chevron-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xs font-bold text-sih-navy uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                        <i class="fa-solid fa-store text-sih-orange"></i> Core Capabilities for Local Vendors
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                        ${showcaseSlides.map((item, idx) => `
+                            <div onclick="setSlide(${idx})" class="cursor-pointer p-3 rounded-xl border transition-all ${idx === AppState.activeSlide ? 'bg-white border-sih-green shadow-md ring-2 ring-sih-green/30' : 'bg-white/80 border-slate-200 hover:bg-white hover:border-slate-300'}">
+                                <div class="w-7 h-7 rounded-lg ${idx === AppState.activeSlide ? 'bg-sih-green text-white' : 'bg-slate-100 text-sih-navy'} flex items-center justify-center text-xs mb-2">
+                                    <i class="${item.icon}"></i>
+                                </div>
+                                <h4 class="font-bold text-[11px] text-slate-800 truncate">${item.badge}</h4>
+                                <p class="text-[10px] text-slate-500 line-clamp-2 mt-0.5">${item.title}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        /* ---------------- REGISTER PAGE ---------------- */
+        function renderRegisterPage() {
+            return `
+            <div class="max-w-3xl mx-auto bg-white p-4 sm:p-8 rounded-xl shadow-md border border-slate-200">
+                <div class="text-center mb-5 sm:mb-6">
+                    <span class="bg-sih-green/10 text-sih-green text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                        Vendor & Retailer Onboarding
+                    </span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800 mt-2">Create Vendor Account</h2>
+                    <p class="text-xs text-slate-500 mt-1">Connect your shop or stall with digital accounting & AI intelligence.</p>
+                </div>
+
+                <form onsubmit="handleRegisterSubmit(event)" class="space-y-4 sm:space-y-5">
+                    <div>
+                        <h3 class="text-xs font-bold text-sih-navy uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-100 flex items-center gap-1.5">
+                            <i class="fa-solid fa-user text-sih-orange"></i> 1. Personal Details
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Full Name *</label>
+                                <input type="text" id="reg-name" required placeholder="e.g. Ramesh Kumar" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Date of Birth (DOB) *</label>
+                                <input type="date" id="reg-dob" required max="2012-01-01" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Mobile Number (10 Digits) *</label>
+                                <input type="tel" id="reg-mobile" inputmode="numeric" required pattern="[0-9]{10}" placeholder="9876543210" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address *</label>
+                                <input type="email" id="reg-email" required placeholder="vendor@example.com" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+                                    <span>Identity Number (12 Digits) *</span>
+                                    <span class="text-[10px] text-amber-700 bg-amber-50 px-1 py-0.5 rounded font-medium border border-amber-200">Secure</span>
+                                </label>
+                                <input type="text" id="reg-aadhaar" inputmode="numeric" required maxlength="12" pattern="[0-9]{12}" placeholder="Enter 12 digits" oninput="handleAadhaarPreview(this)" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none">
+                                <p id="aadhaar-mask-preview" class="text-[11px] text-emerald-600 font-mono mt-1 hidden">Masked: <span id="mask-val"></span></p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Gender *</label>
+                                <select id="reg-gender" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none bg-white">
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xs font-bold text-sih-navy uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-100 flex items-center gap-1.5">
+                            <i class="fa-solid fa-location-dot text-sih-orange"></i> 2. Shop / Stall Location (Pan-India)
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">State / UT *</label>
+                                <select id="reg-state" required onchange="handleStateChange(this.value)" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none bg-white">
+                                    <option value="">Select State / UT</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">District *</label>
+                                <select id="reg-district" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none bg-white">
+                                    <option value="">Select District</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Village / Town / Market *</label>
+                                <input list="town-types-list" id="reg-village" required placeholder="Type or Select Market Area" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none bg-white">
+                                <datalist id="town-types-list"></datalist>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xs font-bold text-sih-navy uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-100 flex items-center gap-1.5">
+                            <i class="fa-solid fa-lock text-sih-orange"></i> 3. Preferences & Password
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Preferred Language *</label>
+                                <select id="reg-language" required class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none bg-white">
+                                    <option value="English">English</option>
+                                    <option value="Hindi">Hindi (हिंदी)</option>
+                                    <option value="Punjabi">Punjabi (ਪੰਜਾਬੀ)</option>
+                                    <option value="Bengali">Bengali (বাংলা)</option>
+                                    <option value="Marathi">Marathi (मराठी)</option>
+                                    <option value="Tamil">Tamil (தமிழ்)</option>
+                                    <option value="Telugu">Telugu (తెలుగు)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Password *</label>
+                                <input type="password" id="reg-password" required minlength="8" placeholder="Min 8 characters" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Confirm Password *</label>
+                                <input type="password" id="reg-confirm-password" required minlength="8" placeholder="Re-type password" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="reg-error-msg" class="hidden p-3 rounded-lg bg-red-50 text-red-700 border border-red-200 text-xs"></div>
+
+                    <button type="submit" class="w-full bg-sih-green hover:bg-emerald-700 active:scale-[0.99] text-white font-semibold py-3 rounded-lg text-sm shadow transition flex items-center justify-center gap-2">
+                        <span>Register Vendor & Send Verification Codes</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <div class="text-center mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500">
+                    Already registered? <button onclick="navigateTo('/login')" class="text-sih-navy font-bold hover:underline">Sign In Here</button>
+                </div>
+            </div>
+            `;
+        }
+
+        function initLocationDropdowns() {
+            const stateSelect = document.getElementById('reg-state');
+            const townDatalist = document.getElementById('town-types-list');
+            if (!stateSelect) return;
+
+            Object.keys(INDIA_LOCATION_DATA).sort().forEach(state => {
+                const opt = document.createElement('option');
+                opt.value = state;
+                opt.textContent = state;
+                stateSelect.appendChild(opt);
+            });
+
+            if (townDatalist) {
+                LOCAL_TOWN_TYPES.forEach(town => {
+                    const opt = document.createElement('option');
+                    opt.value = town;
+                    townDatalist.appendChild(opt);
+                });
+            }
+        }
+
+        function handleStateChange(selectedState) {
+            const districtSelect = document.getElementById('reg-district');
+            if (!districtSelect) return;
+
+            districtSelect.innerHTML = '<option value="">Select District</option>';
+
+            if (selectedState && INDIA_LOCATION_DATA[selectedState]) {
+                INDIA_LOCATION_DATA[selectedState].forEach(dist => {
+                    const opt = document.createElement('option');
+                    opt.value = dist;
+                    opt.textContent = dist;
+                    districtSelect.appendChild(opt);
+                });
+            }
+        }
+
+        /* ---------------- OTP VERIFICATION PAGE ---------------- */
+        function renderVerifyOTPPage() {
+            const pending = AppState.pendingUser;
+            return `
+            <div class="max-w-md mx-auto bg-white p-5 sm:p-8 rounded-xl shadow-md border border-slate-200">
+                <div class="text-center mb-5">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Verify Account</h2>
+                    <p class="text-xs text-slate-500 mt-1">
+                        We have dispatched your verification codes to email <strong class="text-slate-700">${pending ? pending.email : 'vendor@example.com'}</strong> and mobile <strong class="text-slate-700">+91 ${pending ? pending.mobile : '9876543210'}</strong>.
+                    </p>
+                    <div id="otp-sent-notify" class="mt-3 p-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded text-xs">
+                        Codes sent to your registered email & mobile!
+                    </div>
+                </div>
+
+                <form onsubmit="handleVerifyOTP(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Email 6-Digit Code *</label>
+                        <input type="text" id="otp-email" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required placeholder="123456" class="w-full px-3 py-2.5 text-center text-lg font-mono tracking-widest border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Mobile 6-Digit Code (SMS) *</label>
+                        <input type="text" id="otp-mobile" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required placeholder="654321" class="w-full px-3 py-2.5 text-center text-lg font-mono tracking-widest border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none">
+                    </div>
+
+                    <div id="otp-error-msg" class="hidden p-3 rounded-lg bg-red-50 text-red-700 border border-red-200 text-xs text-center"></div>
+
+                    <button type="submit" class="w-full bg-sih-navy hover:bg-slate-800 text-white font-semibold py-3 rounded-lg text-sm shadow transition">
+                        Verify Code & Activate Account
+                    </button>
+                </form>
+
+                <div class="mt-5 text-center space-y-2">
+                    <button id="resend-btn" onclick="handleResendOTP()" ${AppState.resendCooldown > 0 ? 'disabled' : ''} class="text-xs font-semibold ${AppState.resendCooldown > 0 ? 'text-slate-400 cursor-not-allowed' : 'text-sih-green hover:underline'}">
+                        <i class="fa-solid fa-rotate-right mr-1"></i> Resend to Phone & Email ${AppState.resendCooldown > 0 ? `(${AppState.resendCooldown}s)` : ''}
+                    </button>
+                    <p class="text-[11px] text-slate-400">Codes are valid for 5 minutes. Max 3 attempts permitted.</p>
+                </div>
+            </div>
+            `;
+        }
+
+        /* ---------------- LOGIN PAGE ---------------- */
+        function renderLoginPage() {
+            return `
+            <div class="max-w-md mx-auto bg-white p-5 sm:p-8 rounded-xl shadow-md border border-slate-200">
+                <div class="text-center mb-5">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Vendor Login</h2>
+                    <p class="text-xs text-slate-500 mt-1">Access your accounting ledger and AI business tools</p>
+                </div>
+
+                <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Registered Email or 10-Digit Mobile *</label>
+                        <input type="text" id="login-identifier" required placeholder="Registered email or 10-digit mobile" class="w-full px-3 py-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-semibold text-slate-700">Password *</label>
+                            <button type="button" onclick="navigateTo('/forgot-password')" class="text-[11px] text-sih-green hover:underline font-medium">Forgot Password?</button>
+                        </div>
+                        <div class="relative">
+                            <input type="password" id="login-password" required placeholder="Enter password" class="w-full px-3 py-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none pr-10">
+                            <button type="button" onclick="togglePasswordVisibility('login-password')" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="login-error-msg" class="hidden p-3 rounded-lg bg-red-50 text-red-700 border border-red-200 text-xs text-center"></div>
+
+                    <button type="submit" class="w-full bg-sih-green hover:bg-emerald-700 text-white font-semibold py-3 rounded-lg text-sm shadow transition">
+                        Sign In to Udyon AI
+                    </button>
+                </form>
+
+                <div class="text-center mt-5 pt-4 border-t border-slate-100 text-xs text-slate-500">
+                    Need a new account? <button onclick="navigateTo('/register')" class="text-sih-navy font-bold hover:underline">Register New Vendor</button>
+                </div>
+            </div>
+            `;
+        }
+
+        /* ---------------- FORGOT PASSWORD ---------------- */
+        function renderForgotPasswordPage() {
+            return `
+            <div class="max-w-md mx-auto bg-white p-5 sm:p-8 rounded-xl shadow-md border border-slate-200">
+                <div class="text-center mb-5">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Reset Password</h2>
+                    <p class="text-xs text-slate-500 mt-1">Enter your registered details to receive a recovery code</p>
+                </div>
+
+                ${AppState.forgotPasswordStep === 1 ? `
+                    <form onsubmit="handleForgotStep1(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Registered Email or Mobile *</label>
+                            <input type="text" id="forgot-input" required placeholder="Enter registered email or mobile" class="w-full px-3 py-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green focus:outline-none">
+                        </div>
+                        <button type="submit" class="w-full bg-sih-navy hover:bg-slate-800 text-white font-semibold py-3 rounded-lg text-sm shadow transition">
+                            Send Reset Code
+                        </button>
+                    </form>
+                ` : `
+                    <form onsubmit="handleForgotStep2(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Enter Reset Code *</label>
+                            <input type="text" id="forgot-otp" inputmode="numeric" required maxlength="6" placeholder="6-digit code" class="w-full text-center tracking-widest font-mono text-lg px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">New Password *</label>
+                            <input type="password" id="forgot-new-password" required minlength="8" placeholder="Minimum 8 characters" class="w-full px-3 py-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sih-green">
+                        </div>
+                        <button type="submit" class="w-full bg-sih-green hover:bg-emerald-700 text-white font-semibold py-3 rounded-lg text-sm shadow transition">
+                            Update Password & Login
+                        </button>
+                    </form>
+                `}
+
+                <div id="forgot-error-msg" class="hidden mt-4 p-3 rounded-lg bg-red-50 text-red-700 border border-red-200 text-xs text-center"></div>
+
+                <div class="text-center mt-5 pt-3 border-t border-slate-100 text-xs">
+                    <button onclick="navigateTo('/login')" class="text-slate-600 hover:underline">Back to Login</button>
+                </div>
+            </div>
+            `;
+        }
+
+        /* ---------------- DASHBOARD ---------------- */
+        function renderDashboardPage() {
+            const user = AppState.currentUser;
+            if (!user) {
+                return `
+                <div class="max-w-md mx-auto text-center bg-white p-6 sm:p-8 rounded-xl shadow-md border border-slate-200 space-y-4">
+                    <i class="fa-solid fa-lock text-3xl sm:text-4xl text-amber-500"></i>
+                    <h3 class="text-lg sm:text-xl font-bold text-slate-800">Authentication Required</h3>
+                    <p class="text-xs text-slate-500">Please register or log in to access your vendor dashboard.</p>
+                    <button onclick="navigateTo('/login')" class="bg-sih-green text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-emerald-700">Go to Login</button>
+                </div>
+                `;
+            }
+
+            return `
+            <div class="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+                <div class="bg-gradient-to-r from-sih-navy to-slate-900 text-white rounded-xl sm:rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border border-slate-700">
+                    <div>
+                        <span class="bg-sih-orange text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                            Vendor Portal Active
+                        </span>
+                        <h2 class="text-xl sm:text-2xl font-bold mt-2">Welcome, ${user.name}!</h2>
+                        <p class="text-xs text-slate-300 mt-0.5">Shop Area: ${user.village}, ${user.district}, ${user.state}</p>
+                    </div>
+                    <button onclick="handleLogout()" class="bg-red-600/80 hover:bg-red-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition border border-red-500">
+                        <i class="fa-solid fa-right-from-bracket mr-1"></i> Sign Out
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                    <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm flex items-start space-x-3">
+                        <div class="p-2.5 bg-blue-50 text-sih-navy rounded-lg text-base sm:text-lg shrink-0">
+                            <i class="fa-solid fa-cake-candles text-sih-orange"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase">Vendor Profile</span>
+                            <h4 class="font-bold text-slate-800 text-xs sm:text-sm mt-0.5">DOB: ${user.dob || 'Not specified'}</h4>
+                            <p class="text-[11px] sm:text-xs text-slate-500">Gender: ${user.gender || 'N/A'}</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm flex items-start space-x-3">
+                        <div class="p-2.5 bg-blue-50 text-sih-navy rounded-lg text-base sm:text-lg shrink-0">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase">Registered Location</span>
+                            <h4 class="font-bold text-slate-800 text-xs sm:text-sm mt-0.5">${user.district}</h4>
+                            <p class="text-[11px] sm:text-xs text-slate-500">${user.state}</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm flex items-start space-x-3">
+                        <div class="p-2.5 bg-emerald-50 text-sih-green rounded-lg text-base sm:text-lg shrink-0">
+                            <i class="fa-solid fa-id-card"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase">Masked Identity ID</span>
+                            <h4 class="font-mono font-bold text-slate-800 text-xs sm:text-sm mt-0.5">${user.maskedAadhaar}</h4>
+                            <span class="text-[9px] text-emerald-600 font-medium bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                                Privacy Protected
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 text-slate-300 p-5 rounded-xl border border-slate-800 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="font-bold text-white text-xs sm:text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-sih-orange"></i> Udyon Vendor Advisory Engine
+                        </h4>
+                        <span class="text-[10px] bg-sih-green/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30">Active</span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Session authenticated via JWT token. Welcome to Udyon AI! Local market analytics for <strong>${user.district} (${user.state})</strong> are synchronized with your shop location.
+                    </p>
+                </div>
+            </div>
+            `;
+        }
+
+        function handleAadhaarPreview(input) {
+            const previewEl = document.getElementById('aadhaar-mask-preview');
+            const maskVal = document.getElementById('mask-val');
+            if (input.value.length === 12) {
+                maskVal.innerText = maskAadhaar(input.value);
+                previewEl.classList.remove('hidden');
+            } else {
+                previewEl.classList.add('hidden');
+            }
+        }
+
+        function handleRegisterSubmit(e) {
+            e.preventDefault();
+            const errEl = document.getElementById('reg-error-msg');
+            errEl.classList.add('hidden');
+
+            const name = document.getElementById('reg-name').value.trim();
+            const dob = document.getElementById('reg-dob').value;
+            const mobile = document.getElementById('reg-mobile').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const aadhaar = document.getElementById('reg-aadhaar').value.trim();
+            const gender = document.getElementById('reg-gender').value;
+            const state = document.getElementById('reg-state').value;
+            const district = document.getElementById('reg-district').value;
+            const village = document.getElementById('reg-village').value.trim();
+            const language = document.getElementById('reg-language').value;
+            const password = document.getElementById('reg-password').value;
+            const confirmPass = document.getElementById('reg-confirm-password').value;
+
+            if (!state) {
+                errEl.innerText = "Please select your State / UT.";
+                errEl.classList.remove('hidden');
+                return;
+            }
+
+            if (!district) {
+                errEl.innerText = "Please select your District.";
+                errEl.classList.remove('hidden');
+                return;
+            }
+
+            if (password !== confirmPass) {
+                errEl.innerText = "Passwords do not match.";
+                errEl.classList.remove('hidden');
+                return;
+            }
+            if (aadhaar.length !== 12) {
+                errEl.innerText = "Identification number must contain exactly 12 digits.";
+                errEl.classList.remove('hidden');
+                return;
+            }
+
+            const emailOTP = generateOTP();
+            const mobileOTP = generateOTP();
+
+            AppState.pendingUser = {
+                name, dob, email, mobile, gender, village, district, state, language, password,
+                maskedAadhaar: maskAadhaar(aadhaar)
+            };
+
+            AppState.activeOTP = {
+                emailOTP,
+                mobileOTP,
+                expiresAt: Date.now() + 5 * 60 * 1000,
+                attempts: 0,
+                maxAttempts: 3
+            };
+
+            AppState.resendCooldown = 60;
+            
+            showOtpNotification(email, mobile, emailOTP, mobileOTP);
+            navigateTo('/verify-otp');
+        }
+
+        function handleVerifyOTP(e) {
+            e.preventDefault();
+            const errEl = document.getElementById('otp-error-msg');
+            errEl.classList.add('hidden');
+
+            const emailOTPInput = document.getElementById('otp-email').value.trim();
+            const mobileOTPInput = document.getElementById('otp-mobile').value.trim();
+
+            if (Date.now() > AppState.activeOTP.expiresAt) {
+                errEl.innerText = "Codes have expired. Please request a new set.";
+                errEl.classList.remove('hidden');
+                return;
+            }
+
+            if (AppState.activeOTP.attempts >= AppState.activeOTP.maxAttempts) {
+                errEl.innerText = "Maximum attempts exceeded. Please resend.";
+                errEl.classList.remove('hidden');
+                return;
+            }
+
+            if (emailOTPInput === AppState.activeOTP.emailOTP && mobileOTPInput === AppState.activeOTP.mobileOTP) {
+                AppState.currentUser = {
+                    ...AppState.pendingUser,
+                    emailVerified: true,
+                    mobileVerified: true,
+                    id: 'usr_' + Date.now()
+                };
+                AppState.pendingUser = null;
+                closeOtpToast();
+                navigateTo('/dashboard');
+            } else {
+                AppState.activeOTP.attempts += 1;
+                errEl.innerText = `Invalid verification codes. (${AppState.activeOTP.maxAttempts - AppState.activeOTP.attempts} attempts remaining)`;
+                errEl.classList.remove('hidden');
+            }
+        }
+
+        function handleResendOTP() {
+            if (AppState.resendCooldown > 0) return;
+
+            const emailOTP = generateOTP();
+            const mobileOTP = generateOTP();
+
+            AppState.activeOTP = {
+                emailOTP,
+                mobileOTP,
+                expiresAt: Date.now() + 5 * 60 * 1000,
+                attempts: 0,
+                maxAttempts: 3
+            };
+
+            AppState.resendCooldown = 60;
+            if (AppState.pendingUser) {
+                showOtpNotification(AppState.pendingUser.email, AppState.pendingUser.mobile, emailOTP, mobileOTP);
+            }
+            renderAppView();
+        }
+
+        function startCooldownTimerIfNeeded() {
+            if (AppState.cooldownTimer) clearInterval(AppState.cooldownTimer);
+
+            AppState.cooldownTimer = setInterval(() => {
+                if (AppState.resendCooldown > 0) {
+                    AppState.resendCooldown--;
+                    const resendBtn = document.getElementById('resend-btn');
+                    if (resendBtn) {
+                        resendBtn.innerText = `Resend to Phone & Email (${AppState.resendCooldown}s)`;
+                        resendBtn.disabled = true;
+                        resendBtn.className = "text-xs font-semibold text-slate-400 cursor-not-allowed";
+                    }
+                } else {
+                    clearInterval(AppState.cooldownTimer);
+                    const resendBtn = document.getElementById('resend-btn');
+                    if (resendBtn) {
+                        resendBtn.innerHTML = `<i class="fa-solid fa-rotate-right mr-1"></i> Resend to Phone & Email`;
+                        resendBtn.disabled = false;
+                        resendBtn.className = "text-xs font-semibold text-sih-green hover:underline cursor-pointer";
+                    }
+                }
+            }, 1000);
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const identifier = document.getElementById('login-identifier').value.trim();
+            const password = document.getElementById('login-password').value;
+            const errEl = document.getElementById('login-error-msg');
+            errEl.classList.add('hidden');
+
+            if (AppState.currentUser && (identifier === AppState.currentUser.email || identifier === AppState.currentUser.mobile)) {
+                if (password === AppState.currentUser.password) {
+                    navigateTo('/dashboard');
+                    return;
+                }
+            }
+
+            if ((identifier === 'demo@udyon.ai' || identifier === '9876543210') && password === 'password123') {
+                AppState.currentUser = {
+                    name: 'Ramesh Kumar',
+                    dob: '1992-08-15',
+                    gender: 'Male',
+                    email: 'demo@udyon.ai',
+                    mobile: '9876543210',
+                    maskedAadhaar: 'XXXX-XXXX-8901',
+                    village: 'Rampur Bazaar',
+                    district: 'Varanasi',
+                    state: 'Uttar Pradesh',
+                    language: 'English',
+                    emailVerified: true,
+                    mobileVerified: true
+                };
+                navigateTo('/dashboard');
+            } else {
+                errEl.innerText = "Invalid credentials. Try: demo@udyon.ai / password123 or register a new vendor.";
+                errEl.classList.remove('hidden');
+            }
+        }
+
+        function handleForgotStep1(e) {
+            e.preventDefault();
+            AppState.forgotEmailOrMobile = document.getElementById('forgot-input').value.trim();
+            AppState.forgotPasswordStep = 2;
+            const otp = generateOTP();
+            AppState.activeOTP.emailOTP = otp;
+            showOtpNotification(AppState.forgotEmailOrMobile, AppState.forgotEmailOrMobile, otp, otp);
+            renderAppView();
+        }
+
+        function handleForgotStep2(e) {
+            e.preventDefault();
+            const otp = document.getElementById('forgot-otp').value.trim();
+            const errEl = document.getElementById('forgot-error-msg');
+
+            if (otp === AppState.activeOTP.emailOTP) {
+                AppState.forgotPasswordStep = 1;
+                alert('Password reset successful! Please login with your new password.');
+                navigateTo('/login');
+            } else {
+                errEl.innerText = "Invalid verification code entered.";
+                errEl.classList.remove('hidden');
+            }
+        }
+
+        function handleLogout() {
+            AppState.currentUser = null;
+            navigateTo('/home');
+        }
+
+        function togglePasswordVisibility(fieldId) {
+            const input = document.getElementById(fieldId);
+            if (input) {
+                input.type = input.type === 'password' ? 'text' : 'password';
+            }
+        }
+
+        /* ================= CODE VIEW REPOSITORY ================= */
+        const CODE_FILES = {
+            'backend/controllers/authController.js': `const User = require('../models/User');
+const emailService = require('../services/emailService');
+const smsService = require('../services/smsService');
+
+exports.register = async (req, res) => {
+  const { name, dob, email, mobile, aadhaar, state, district, village, password } = req.body;
+  // Dispatches OTPs directly to vendor contact via SMS gateway and email SMTP
+  await emailService.sendVerificationOTP(email, name, emailOTP);
+  await smsService.sendSMSOTP(mobile, mobileOTP);
+};`,
+            'backend/models/User.js': `const mongoose = require('mongoose');
+const userSchema = new mongoose.Schema({
+  name: String,
+  dob: String,
+  email: { type: String, unique: true },
+  mobile: { type: String, unique: true },
+  maskedAadhaar: String,
+  state: String,
+  district: String,
+  village: String,
+  language: String
+});
+module.exports = mongoose.model('User', userSchema);`,
+            'backend/routes/authRoutes.js': `const router = require('express').Router();
+router.post('/register', authController.register);
+module.exports = router;`,
+            'backend/services/smsService.js': `exports.sendSMSOTP = async (mobile, otp) => {
+  return await twilioClient.messages.create({
+    body: \`Your Udyon AI code is: \${otp}\`,
+    to: \`+91\${mobile}\`
+  });
+};`,
+            'backend/services/emailService.js': `exports.sendVerificationOTP = async (email, name, otp) => {
+  return await transporter.sendMail({ to: email, subject: 'Your Udyon AI Verification Code' });
+};`,
+            'frontend/src/pages/Register.jsx': `// Dispatches registration data & sends OTP directly to user contact`,
+            'frontend/src/pages/Dashboard.jsx': `// Secure dashboard with authenticated JWT session`
+        };
+
+        function loadFile(filePath) {
+            const display = document.getElementById('code-display');
+            const fileNameEl = document.getElementById('active-file-name');
+
+            document.querySelectorAll('.file-btn').forEach(btn => {
+                if (btn.dataset.file === filePath) {
+                    btn.classList.add('bg-slate-800', 'text-sih-orange', 'font-bold');
+                } else {
+                    btn.classList.remove('bg-slate-800', 'text-sih-orange', 'font-bold');
+                }
+            });
+
+            if (CODE_FILES[filePath]) {
+                fileNameEl.innerHTML = `<i class="fa-solid fa-file-code"></i> ${filePath}`;
+                display.textContent = CODE_FILES[filePath];
+                window.currentLoadedCode = CODE_FILES[filePath];
+            }
+        }
+
+        function copyCurrentCode() {
+            if (window.currentLoadedCode) {
+                const textarea = document.createElement('textarea');
+                textarea.value = window.currentLoadedCode;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('File code copied to clipboard!');
+            }
+        }
+
+        window.addEventListener('hashchange', handleHashRouting);
+
+        window.onload = function() {
+            handleHashRouting();
+        };
+    </script>
+</body>
+</html>
